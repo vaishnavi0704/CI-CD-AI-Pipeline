@@ -1,23 +1,72 @@
 # CI/CD + AI Pipeline (cicd-ai-pipeline)
 
-This repository is a demo end-to-end CI/CD pipeline that includes a sample Node.js application, container images, a small ML subproject (training + model serving), Kubernetes manifests (kustomize/base overlays), and monitoring / quality tools (Prometheus/Grafana, SonarQube, Jenkins). The project is designed to be runnable locally with Docker and Minikube and easily adapted to CI systems.
+## Tools, Tech Stacks, and Platforms Used
+
+- **Programming Languages:** Python, JavaScript (Node.js)
+- **Frameworks & Libraries:** Express, Flask, scikit-learn, xgboost, prometheus_client, Jest
+- **Containerization & Orchestration:** Docker, Minikube, Kubernetes, Helm, Kustomize
+- **CI/CD & DevOps:** Jenkins, GitHub, GitHub Actions (optional)
+- **Monitoring & Quality:** Prometheus, Grafana, SonarQube
+- **Other Tools:** Sonar Scanner, Bash scripts (security scan, dependency scan, blue-green deployment), Python virtualenv
+- **Platforms:** Linux, GitHub, Docker Hub (optional)
+
+
+This repository demonstrates a complete, production-style CI/CD pipeline integrating modern DevOps, machine learning, and monitoring tools. It features:
+
+- A Node.js application (Express server) for demo purposes, with automated testing and code quality checks.
+- A Python-based ML pipeline for training and serving models (quality prediction, anomaly detection) using scikit-learn and xgboost.
+- Containerization of all services using Docker, with orchestration via Kubernetes (Minikube for local development).
+- Automated CI/CD using Jenkins (with Helm for deployment), plus optional GitHub Actions workflows.
+- Comprehensive monitoring and code quality analysis using Prometheus (metrics), Grafana (dashboards), and SonarQube (static code analysis).
+- Infrastructure-as-code for all deployments, with Kustomize overlays for dev/staging/prod environments.
+- Security and dependency scanning via custom Bash scripts.
+
+All components are designed to work together in a local or cloud-native Kubernetes cluster, with clear separation of concerns and extensibility for real-world use cases.
 
 ---
 
-## High-level architecture
 
-- `app/` — Node.js demo application. Contains Dockerfile, frontend/server code, tests and sonar/sonar-scanner configuration.
-- `ai-models/` — Python ML code and model serving.
-  - `training/` — training scripts (quality & anomaly models) and small utilities.
-  - `serving/` — Flask-based model server exposes REST endpoints and Prometheus metrics.
-  - `models/` — trained model artifacts (gitignored in normal projects; included here for demo).
-  - `requirements.txt` and a `venv/` for local development.
-- `k8s/` — Kubernetes manifests (base + overlays) for deploying app, AI service, Jenkins and other infra.
-- `monitoring/` — Grafana, Prometheus, SonarQube manifests and dashboards.
-- `jenkins/` — Helm values and helper scripts for Jenkins.
-- `scripts/` — utility scripts (security scan, dependency scan).
+## Architecture Overview
 
-The pipeline demonstrates building images, running tests, scanning (SCA), and deploying to a Kubernetes cluster (Minikube for local testing). The AI models are trained locally and packaged into an image for running in-cluster.
+**1. Application Layer**
+  - `app/`: Node.js Express server with REST endpoints, unit tests (Jest), and SonarQube integration for code quality. Includes Dockerfile for containerization.
+
+**2. Machine Learning Layer**
+  - `ai-models/`: Python ML codebase.
+    - `training/`: Scripts for training quality and anomaly detection models using scikit-learn and xgboost. Produces model artifacts (`quality_predictor.pkl`, `model_metrics.json`).
+    - `serving/`: Flask server that loads trained models and exposes REST endpoints for predictions (`/predict/quality`, `/predict/anomaly`, `/predict/comprehensive`). Publishes Prometheus metrics for monitoring.
+    - `models/`: Stores trained model files (excluded from git in production).
+    - `requirements.txt`, `venv/`: Python dependencies and virtual environment for local development.
+
+**3. Containerization & Orchestration**
+  - Dockerfiles in both `app/` and `ai-models/` for building images.
+  - Minikube used for local Kubernetes cluster.
+  - `k8s/`: Kubernetes manifests for deploying all services, with Kustomize overlays for dev, staging, and production.
+
+**4. CI/CD Pipeline**
+  - Jenkins: Automated build, test, and deploy pipeline. Helm charts and manifests in `jenkins/` for easy setup.
+  - GitHub Actions (optional): For automated CI workflows.
+  - Bash scripts in `scripts/`: Security scan, dependency scan, blue-green deployment.
+
+**5. Monitoring & Quality**
+  - Prometheus: Collects metrics from the Flask model server and Node.js app.
+  - Grafana: Visualizes metrics and dashboards.
+  - SonarQube: Performs static code analysis on both Node.js and Python codebases. Integrated via Sonar Scanner and Jenkins pipeline.
+
+**6. Infrastructure & Platform**
+  - Linux: Development and deployment environment.
+  - GitHub: Source code hosting and collaboration.
+  - Docker Hub: Optional image registry for container images.
+
+**7. Security & Compliance**
+  - Custom Bash scripts for security and dependency scanning.
+  - SonarQube for code quality and vulnerability detection.
+
+This architecture ensures:
+- Automated, reproducible builds and deployments
+- Continuous integration and code quality enforcement
+- Scalable, monitored ML model serving
+- Easy local development and cloud migration
 
 ---
 
