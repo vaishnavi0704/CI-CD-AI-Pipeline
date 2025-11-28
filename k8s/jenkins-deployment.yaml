@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jenkins
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc
+  namespace: jenkins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:2.528.2-jdk21
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 50000
+          name: agent-listener
+        env:
+        - name: JAVA_OPTS
+          value: "-Xms128m -Xmx512m"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+      volumes:
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  - port: 50000
+    targetPort: 50000
+    name: agent-listener
+  selector:
+    app: jenkins

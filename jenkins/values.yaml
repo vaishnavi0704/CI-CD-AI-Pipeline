@@ -1,0 +1,24 @@
+controller:
+  image:
+    pullPolicy: IfNotPresent
+  
+  serviceType: NodePort
+  
+  installPlugins: []
+  
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+  
+  javaOpts: "-Xms128m -Xmx512m"
+
+agent:
+  enabled: false
+
+persistence:
+  enabled: true
+  size: 8Gi

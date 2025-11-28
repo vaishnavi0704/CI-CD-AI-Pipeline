@@ -1,0 +1,14 @@
+{
+  "accuracy": 0.5,
+  "auc": 0.4166666666666667,
+  "feature_importance": {
+    "test_pass_rate": 0.1171686127781868,
+    "code_coverage": 0.16114529967308044,
+    "security_vulnerabilities": 0.1046987771987915,
+    "code_complexity": 0.16015677154064178,
+    "lines_of_code": 0.08765047788619995,
+    "deployment_frequency": 0.09037241339683533,
+    "quality_score": 0.13224512338638306,
+    "risk_score": 0.14656250178813934
+  }
+}
