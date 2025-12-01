@@ -197,11 +197,4 @@ Implementation notes and resilient behavior:
 - `k8s/` — manifests to deploy app and ai-model-server
 - `jenkins/`, `monitoring/` — pipeline tooling and monitoring
 
----
 
-If you want, I can also:
-- add a `README` in `ai-models/` with local dev steps and commands,
-- add a small smoke-test that hits `/health` and `/predict/quality` after deployment,
-- or create a simple GitHub Actions workflow that builds images and runs tests.
-
-Happy to continue—what would you like next?
